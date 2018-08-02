@@ -1,6 +1,7 @@
 package com.catran.trading.netty.server
 
 
+import com.catran.trading.netty.client.{Client, TeakHandler}
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -38,6 +39,7 @@ class Server(port: Int) {
 
 object Server {
   def main(args: Array[String]): Unit = {
-    new Server(5555).run()
+    new Client("localhost", 5555, new TeakHandler()) // start of pyton client
+    new Server(5554).run()
   }
 }

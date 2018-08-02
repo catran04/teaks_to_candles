@@ -12,11 +12,12 @@ public class ChatServerHandler extends ChannelInboundMessageHandlerAdapter<Strin
 
     //private static final String name = "NEWTUN";
     private static final ChannelGroup channels = new DefaultChannelGroup();
+    Object obj = sendLoop();
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         Channel incoming = ctx.channel();
-        for (Channel channel: channels){
+        for (Channel channel : channels) {
             channel.write("[SERVER] - " + incoming.remoteAddress() + " has joined!");
         }
         channels.add(ctx.channel());
@@ -25,7 +26,7 @@ public class ChatServerHandler extends ChannelInboundMessageHandlerAdapter<Strin
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         Channel incoming = ctx.channel();
-        for (Channel channel: channels){
+        for (Channel channel : channels) {
             channel.write("[SERVER] - " + incoming.remoteAddress() + " has left!");
         }
         channels.remove(ctx.channel());
@@ -34,10 +35,29 @@ public class ChatServerHandler extends ChannelInboundMessageHandlerAdapter<Strin
     @Override
     public void messageReceived(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
         Channel incoming = channelHandlerContext.channel();
-        for (Channel channel: channels){
-            if(channel != incoming){
-                channel.write("[ "+incoming.remoteAddress()+" ]" + ": " + s + " : \n");
+        for (Channel channel : channels) {
+            if (channel != incoming) {
+                channel.write("[ " + incoming.remoteAddress() + " ]" + ": " + s + " : \n");
             }
         }
+    }
+
+    private Object sendLoop() {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                for (Channel channel : channels) {
+                    channel.write("here you are\n");
+                    channel.flush();
+                }
+                try {
+                    Thread.currentThread().sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+        return null;
     }
 }

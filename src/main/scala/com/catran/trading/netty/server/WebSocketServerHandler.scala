@@ -16,42 +16,29 @@ class WebSocketServerHandler extends ChannelInboundMessageHandlerAdapter[String]
   private val logger = Logger.getLogger(getClass)
 
   val channels = new DefaultChannelGroup()
-  sendLoop
+  sendLoop()
 
   override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = {
-    val incoming = ctx.channel()
-    for(channel <- channels.asScala) {
-      if(channel != incoming) {
-        channel.write(s"[ ${incoming.remoteAddress()} ]: $msg \n")
-//        channel.flush()
-      }
-    }
+    println(s"message rec: ${msg}")
   }
 
   override def handlerAdded(ctx: ChannelHandlerContext): Unit = {
-    val channel = ctx.channel()
-    for(channel <- channels.asScala) {
-      channel.write(s"${channel.remoteAddress()} was connected\n")
-//      channel.flush()
-    }
+    val ch = ctx.channel()
+    ch.write("10 minutes of data")
     channels.add(ctx.channel())
   }
 
   override def handlerRemoved(ctx: ChannelHandlerContext): Unit = {
-    val channel = ctx.channel()
-    for(channel <- channels.asScala) {
-      channel.write(s"${channel.remoteAddress()} was left\n")
-      channel.flush()
-    }
     channels.remove(ctx.channel())
   }
 
-  private def sendLoop: Unit = Future{
+  private def sendLoop(): Unit = Future{
     var i = 0
     while(true) {
       for(channel <- channels.asScala) {
         channel.write(s"hello: ${i} \n")
       }
+      i += 1
       Thread.sleep(2000)
     }
   }
