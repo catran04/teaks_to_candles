@@ -21,7 +21,14 @@ class Server(port: Int) {
         .channel(classOf[NioServerSocketChannel])
         .handler(new LoggingHandler(LogLevel.INFO))
         .childHandler(new ServerInitializer())
-      bootstrap.bind(port).sync().channel().closeFuture().sync()
+
+      println("I'm here0")
+      val fut = bootstrap.bind(port).sync().channel().closeFuture().sync()
+      while(true) {
+        println("I'm here")
+        fut.channel().write("asdf")
+        Thread.sleep(2000)
+      }
     } finally {
       bossGroup.shutdownGracefully()
       workerGroup.shutdownGracefully()

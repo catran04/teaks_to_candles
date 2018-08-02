@@ -2,3 +2,4 @@
 *.class
 *.cache
 target/
+project/build.properties
