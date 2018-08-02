@@ -1,19 +1,13 @@
 package com.catran.trading.receiver
 
 import com.catran.trading.model.Teak
-import com.catran.trading.netty.client.{Client, TeakHandler}
 
-class TCPReceiver(client: Client) extends Receiver {
+import scala.collection.mutable
 
+class TCPReceiver extends  Receiver {
 
-  override def getTeaks: List[Teak] = {
-    client.hand.hand.asInstanceOf[TeakHandler].getTeaks
-  }
+  private val teaks = mutable.MutableList[Teak]()
 
-}
+  override def getTeaks: List[Teak] = teaks.toList
 
-object Main {
-  def main(args: Array[String]): Unit = {
-    println(new TCPReceiver())
-  }
 }

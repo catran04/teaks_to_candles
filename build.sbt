@@ -22,3 +22,4 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
 // https://mvnrepository.com/artifact/io.netty/netty-all
 libraryDependencies += "io.netty" % "netty-all" % "4.0.0.CR3"
 
+libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.8.11.2"

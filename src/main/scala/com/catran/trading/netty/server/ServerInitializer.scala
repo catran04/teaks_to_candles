@@ -9,7 +9,6 @@ import io.netty.handler.codec.string.{StringDecoder, StringEncoder}
 class ServerInitializer extends ChannelInitializer[SocketChannel]{
   override def initChannel(ch: SocketChannel): Unit = {
     val pipeline = ch.pipeline()
-    val handler = new ChatServerHandler()
 
     pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192,
       Delimiters.lineDelimiter(): _*))

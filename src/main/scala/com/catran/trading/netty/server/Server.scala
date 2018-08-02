@@ -1,7 +1,8 @@
 package com.catran.trading.netty.server
 
 
-import com.catran.trading.netty.client.{Client, TeakHandler}
+import com.catran.trading.netty.client.Client
+import com.catran.trading.options.ApplicationOptions
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -23,13 +24,7 @@ class Server(port: Int) {
         .handler(new LoggingHandler(LogLevel.INFO))
         .childHandler(new ServerInitializer())
 
-      println("I'm here0")
-      val fut = bootstrap.bind(port).sync().channel().closeFuture().sync()
-      while(true) {
-        println("I'm here")
-        fut.channel().write("asdf")
-        Thread.sleep(2000)
-      }
+      bootstrap.bind(port).sync().channel().closeFuture().sync()
     } finally {
       bossGroup.shutdownGracefully()
       workerGroup.shutdownGracefully()
@@ -39,7 +34,8 @@ class Server(port: Int) {
 
 object Server {
   def main(args: Array[String]): Unit = {
-    new Client("localhost", 5555, new TeakHandler()) // start of pyton client
-    new Server(5554).run()
+    val options = ApplicationOptions(args)
+    new Client(host = options.brokerHost, port = options.brokerPort, handler = options.brokerHandler).run()
+    new Server(port = options.serverPort).run()
   }
 }
