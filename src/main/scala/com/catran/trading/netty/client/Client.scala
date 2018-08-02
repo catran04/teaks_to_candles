@@ -20,13 +20,10 @@ class Client(host: String, port: Int) {
         .handler(new ClientInitializer())
 
       val channel = bootstrap.connect(host, port).sync().channel()
-      println(s"Client was connect to:${host}:${port}. ")
       val in = new BufferedReader(new InputStreamReader(System.in))
-//      while(true) {
-//        channel.write(in.readLine() + "\r\n")
-//        channel.flush()
-//      }
-      in.readLine()
+      while(true) {
+        channel.write(in.readLine() + "\r\n")
+      }
     } finally {
       group.shutdownGracefully()
     }

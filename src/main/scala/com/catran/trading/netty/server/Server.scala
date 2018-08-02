@@ -2,14 +2,8 @@ package com.catran.trading.netty.server
 
 
 import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.{DelimiterBasedFrameDecoder, Delimiters}
-import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler
-import io.netty.handler.codec.http.{HttpObjectAggregator, HttpServerCodec}
-import io.netty.handler.codec.string.{StringDecoder, StringEncoder}
 import io.netty.handler.logging.{LogLevel, LoggingHandler}
 
 
@@ -26,14 +20,7 @@ class Server(port: Int) {
         .group(bossGroup, workerGroup)
         .channel(classOf[NioServerSocketChannel])
         .handler(new LoggingHandler(LogLevel.INFO))
-        .childHandler(new ChannelInitializer[SocketChannel]() {
-          override def initChannel(ch: SocketChannel) = {
-            ch.pipeline().addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter(): _*))
-            ch.pipeline().addLast("decoder", new StringDecoder())
-            ch.pipeline().addLast("encoder", new StringEncoder())
-            ch.pipeline().addLast(new WebSocketServerHandler())
-          }
-        })
+        .childHandler(new ServerInitializer())
       bootstrap.bind(port).sync().channel().closeFuture().sync()
     } finally {
       bossGroup.shutdownGracefully()

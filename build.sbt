@@ -20,5 +20,5 @@ libraryDependencies += "org.json4s" %% "json4s-core" % "3.5.2"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
 
 // https://mvnrepository.com/artifact/io.netty/netty-all
-libraryDependencies += "io.netty" % "netty-all" % "4.1.25.Final"
+libraryDependencies += "io.netty" % "netty-all" % "4.0.0.CR3"
 
