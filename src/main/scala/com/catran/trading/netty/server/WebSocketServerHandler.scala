@@ -1,9 +1,7 @@
 package com.catran.trading.netty.server
 
-import com.catran.trading.dao.teakDao.TeakDao
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
-import io.netty.handler.codec.http.websocketx._
 import io.netty.util.concurrent.DefaultEventExecutor
 import org.apache.log4j.Logger
 
@@ -13,8 +11,7 @@ import scala.concurrent.Future
 /**
   * Created by Administrator on 7/30/2018.
   */
-class WebSocketServerHandler(teakDao: TeakDao) extends SimpleChannelInboundHandler[String]{
-  private var handshaker: WebSocketServerHandshaker = _
+class WebSocketServerHandler() extends SimpleChannelInboundHandler[String]{
   private val logger = Logger.getLogger(getClass)
 
   val channels = new DefaultChannelGroup(new DefaultEventExecutor())
@@ -25,9 +22,8 @@ class WebSocketServerHandler(teakDao: TeakDao) extends SimpleChannelInboundHandl
   }
 
   override def handlerAdded(ctx: ChannelHandlerContext): Unit = {
-    val ch = ctx.channel()
-    ch.write("10 minutes of data")
-    channels.add(ctx.channel())
+
+
   }
 
   override def handlerRemoved(ctx: ChannelHandlerContext): Unit = {

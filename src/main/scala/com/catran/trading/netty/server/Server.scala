@@ -23,7 +23,7 @@ class Server(port: Int, teakDao: TeakDao) {
         .group(bossGroup, workerGroup)
         .channel(classOf[NioServerSocketChannel])
         .handler(new LoggingHandler(LogLevel.INFO))
-        .childHandler(new ServerInitializer(teakDao))
+        .childHandler(new ServerInitializer())
 
       println(s"server was started on port: ${port}")
       bootstrap.bind(port).sync().channel().closeFuture().sync()
