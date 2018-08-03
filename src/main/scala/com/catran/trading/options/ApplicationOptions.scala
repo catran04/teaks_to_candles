@@ -43,7 +43,7 @@ object ApplicationOptions {
 }
 
 case class SqLiteOptions(
-                          workingConnection: String = "jdbc:sqlite:userdb.db",
+                          workingConnection: String = s"jdbc:sqlite:teakTable.db",
                           testConnection: String = "jdbc:sqlite:testdb.db",
                           driver: String = "org.sqlite.JDBC"
                         )

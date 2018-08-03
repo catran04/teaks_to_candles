@@ -4,3 +4,4 @@
 target/
 project/build.properties
 userdb.db
+teakTable.db

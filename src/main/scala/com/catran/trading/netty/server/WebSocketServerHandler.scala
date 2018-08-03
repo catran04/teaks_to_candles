@@ -1,5 +1,6 @@
 package com.catran.trading.netty.server
 
+import com.catran.trading.dao.teakDao.TeakDao
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import io.netty.handler.codec.http.websocketx._
@@ -12,7 +13,7 @@ import scala.concurrent.Future
 /**
   * Created by Administrator on 7/30/2018.
   */
-class WebSocketServerHandler extends SimpleChannelInboundHandler[String]{
+class WebSocketServerHandler(teakDao: TeakDao) extends SimpleChannelInboundHandler[String]{
   private var handshaker: WebSocketServerHandshaker = _
   private val logger = Logger.getLogger(getClass)
 

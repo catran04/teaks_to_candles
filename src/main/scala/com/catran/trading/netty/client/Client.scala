@@ -4,21 +4,22 @@ import java.io.{BufferedReader, InputStreamReader}
 
 import com.catran.trading.options.ApplicationOptions
 import io.netty.bootstrap.Bootstrap
-import io.netty.channel.ChannelHandler
+import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
 
 /**
   * Created by Administrator on 7/30/2018.
   */
-class Client  (host: String, port: Int, handler: ChannelHandler, options: ApplicationOptions) {
+class Client  (host: String, port: Int, initializer: ChannelInitializer[SocketChannel]) {
   def run(): Unit = {
     val group = new NioEventLoopGroup()
     try {
       val bootstrap = new Bootstrap()
         .group(group)
         .channel(classOf[NioSocketChannel])
-        .handler(new ClientInitializer(options, handler))
+        .handler(initializer)
 
       val channel = bootstrap.connect(host, port).sync().channel()
       val in = new BufferedReader(new InputStreamReader(System.in))
@@ -36,8 +37,7 @@ object Client {
     val options = ApplicationOptions(args)
     new Client(
       host = options.brokerHost,
-      port = options.brokerPort,
-      handler = options.clientHandler,
-      options = options).run()
+      port = 9590,
+      initializer = new ClientInitializer()).run()
   }
 }
