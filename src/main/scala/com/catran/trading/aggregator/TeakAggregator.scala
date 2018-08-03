@@ -4,13 +4,13 @@ import com.catran.trading.model.{Candle, Teak}
 
 object TeakAggregator {
 
-  def createCandles(teaks: Vector[Teak]): Vector[Candle] = {
+  def createCandles(teaks: List[Teak]): List[Candle] = {
     require(teaks.nonEmpty, "List of teaks is empty")
     val grouped = teaks.groupBy(_.ticker)
-    grouped.map(pair => createCandle(pair._2)).toVector
+    grouped.map(pair => createCandle(pair._2)).toList
   }
 
-  private def createCandle(teaksOfOneTicker: Vector[Teak]): Candle = {
+  private def createCandle(teaksOfOneTicker: List[Teak]): Candle = {
     new Candle(
       ticker = teaksOfOneTicker.head.ticker,
       timestamp = teaksOfOneTicker.minBy(_.timestamp).timestamp,
