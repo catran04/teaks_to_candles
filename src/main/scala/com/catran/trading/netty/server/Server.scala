@@ -2,6 +2,7 @@ package com.catran.trading.netty.server
 
 
 import com.catran.trading.dao.teakDao.{SQLiteTeakDao, TeakDao}
+import com.catran.trading.netty.client.{Client, TeakInitializer}
 import com.catran.trading.options.ApplicationOptions
 import com.catran.trading.sql.sq_lite.SQLiteConnector
 import io.netty.bootstrap.ServerBootstrap
@@ -38,10 +39,10 @@ object Server {
   def main(args: Array[String]): Unit = {
     val options = ApplicationOptions(args)
     val teakDao = new SQLiteTeakDao(options, new SQLiteConnector())
-//    new Client(
-//      host = "localhost",
-//      port = 5555,
-//      initializer = new TeakInitializer(options, teakDao)).run()
+    new Client(
+      host = "localhost",
+      port = 5555,
+      initializer = new TeakInitializer(options, teakDao)).run()
     new Server(port = 9590, teakDao).run()
   }
 }

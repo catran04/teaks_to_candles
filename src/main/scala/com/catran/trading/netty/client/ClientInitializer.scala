@@ -2,8 +2,8 @@ package com.catran.trading.netty.client
 
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
-import io.netty.handler.codec.string.{StringDecoder, StringEncoder}
 import io.netty.handler.codec.{DelimiterBasedFrameDecoder, Delimiters}
+import io.netty.handler.codec.string.{StringDecoder, StringEncoder}
 
 class ClientInitializer() extends ChannelInitializer[SocketChannel] {
   override def initChannel(ch: SocketChannel): Unit = {

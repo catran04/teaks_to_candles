@@ -19,7 +19,7 @@ class Client  (host: String, port: Int, initializer: ChannelInitializer[SocketCh
       val bootstrap = new Bootstrap()
         .group(group)
         .channel(classOf[NioSocketChannel])
-        .handler(new ClientInitializer())
+        .handler(initializer)
 
       val channel = bootstrap.connect(host, port).sync().channel()
       val in = new BufferedReader(new InputStreamReader(System.in))
