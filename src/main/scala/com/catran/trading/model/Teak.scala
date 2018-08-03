@@ -7,10 +7,10 @@ import org.json4s.native.Serialization
   * Created by Administrator on 7/30/2018.
   */
 case class Teak(
-                 timestamp: String,
+                 timestamp: Long,
                  ticker: String,
                  price: Double,
-                 volume: Long
+                 volume: Int
                ) {
 
 }
