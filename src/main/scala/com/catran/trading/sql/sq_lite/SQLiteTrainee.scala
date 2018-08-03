@@ -11,13 +11,15 @@ class SQLiteTrainee(cn: Connection, options: ApplicationOptions) {
   private val statement = cn.createStatement()
 
 
-
   /**
     * creates the table for a working application
     */
   def createTable: Unit = {
     statement.execute(s"CREATE TABLE IF NOT EXISTS ${options.tableName}(" +
-      "id VARCHAR(128) PRIMARY KEY);")
+      "timestamp INTEGER PRIMARY KEY," +
+      "ticker VARCHAR(12) NOT NULL," +
+      "price REAL NOT NULL," +
+      "volume INTEGER);")
     logger.info(s"the table '${options.tableName}' was created")
   }
 }
@@ -26,6 +28,7 @@ object SQLiteTrainee {
 
   /**
     * change database and creates table into it
+    *
     * @param cn connection to MySql server
     * @param options
     */

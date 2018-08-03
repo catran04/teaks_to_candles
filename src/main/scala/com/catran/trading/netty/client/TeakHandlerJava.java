@@ -19,6 +19,7 @@ public class TeakHandlerJava extends SimpleChannelInboundHandler<ByteBuf> {
         byte[] bytes = getByteArrayFromByteBuffer(msg);
         try {
             Teak teak = ByteDecoder.apply(bytes);
+            System.out.println(teak);
             teakDao.setTeak(teak);
         } catch (Exception e) {
             e.printStackTrace();

@@ -11,14 +11,14 @@ import io.netty.channel.socket.nio.NioSocketChannel
 /**
   * Created by Administrator on 7/30/2018.
   */
-class Client(host: String, port: Int, handler: ChannelHandler) {
+class Client  (host: String, port: Int, handler: ChannelHandler, options: ApplicationOptions) {
   def run(): Unit = {
     val group = new NioEventLoopGroup()
     try {
       val bootstrap = new Bootstrap()
         .group(group)
         .channel(classOf[NioSocketChannel])
-        .handler(new ClientInitializer(handler))
+        .handler(new ClientInitializer(options, handler))
 
       val channel = bootstrap.connect(host, port).sync().channel()
       val in = new BufferedReader(new InputStreamReader(System.in))
@@ -34,6 +34,10 @@ class Client(host: String, port: Int, handler: ChannelHandler) {
 object Client {
   def main(args: Array[String]): Unit = {
     val options = ApplicationOptions(args)
-    new Client(host = options.brokerHost, port = options.brokerPort, handler = options.clientHandler).run()
+    new Client(
+      host = options.brokerHost,
+      port = options.brokerPort,
+      handler = options.clientHandler,
+      options = options).run()
   }
 }

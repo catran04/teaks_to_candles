@@ -5,12 +5,12 @@ package com.catran.trading.model
   */
 class Candle(
                    ticker: String,
-                   timestamp: String,
+                   timestamp: Long,
                    open: Double,
                    high: Double,
                    low: Double,
                    close: Double,
-                   volume: Long
+                   volume: Int
                  ) {
 
 }

@@ -1,8 +1,10 @@
 package com.catran.trading.netty.server
 
 
-import com.catran.trading.netty.client.Client
+import com.catran.trading.dao.teakDao.SQLiteTeakDao
+import com.catran.trading.netty.client.{Client, TeakHandlerJava}
 import com.catran.trading.options.ApplicationOptions
+import com.catran.trading.sql.sq_lite.SQLiteConnector
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -35,7 +37,12 @@ class Server(port: Int) {
 object Server {
   def main(args: Array[String]): Unit = {
     val options = ApplicationOptions(args)
-    new Client(host = "localhost", port = 5555, handler = options.brokerHandler).run()
+    val teakDao = new SQLiteTeakDao(options, new SQLiteConnector())
+    new Client(
+      host = "localhost",
+      port = 5555,
+      handler = new TeakHandlerJava(teakDao),
+      options = options).run()
 //    new Server(port = options.serverPort).run()
   }
 }

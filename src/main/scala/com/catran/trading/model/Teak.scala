@@ -13,6 +13,11 @@ case class Teak(
                  volume: Int
                ) {
 
+  override def toString: String = {
+    implicit val formats = native.Serialization.formats(NoTypeHints)
+    Serialization.write[Teak](this)
+  }
+
 }
 
 object Teak {
