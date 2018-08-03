@@ -35,7 +35,7 @@ class Server(port: Int) {
 object Server {
   def main(args: Array[String]): Unit = {
     val options = ApplicationOptions(args)
-    new Client(host = options.brokerHost, port = options.brokerPort, handler = options.brokerHandler).run()
-    new Server(port = options.serverPort).run()
+    new Client(host = "localhost", port = 5555, handler = options.brokerHandler).run()
+//    new Server(port = options.serverPort).run()
   }
 }

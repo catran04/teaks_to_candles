@@ -1,6 +1,8 @@
 package com.catran.trading.options
 
+import com.catran.trading.dao.teakDao.SQLiteTeakDao
 import com.catran.trading.netty.client.{ClientHandler, TeakHandler}
+import com.catran.trading.sql.sq_lite.SQLiteConnector
 import io.netty.channel.ChannelHandler
 
 /**
@@ -15,7 +17,7 @@ case class ApplicationOptions(
                                serverPort: Int = 5554,
                                clientHost: String = "localhost",
                                clientPort: Int = 5554,
-                               brokerHandler: ChannelHandler = new TeakHandler(),
+                               brokerHandler: ChannelHandler = new TeakHandler(new SQLiteTeakDao(new SQLiteConnector())),
                                clientHandler: ChannelHandler = new ClientHandler(),
                                sqlite: SqLiteOptions = SqLiteOptions()
                              )

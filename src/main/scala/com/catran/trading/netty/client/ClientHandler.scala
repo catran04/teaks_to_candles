@@ -1,12 +1,12 @@
 package com.catran.trading.netty.client
 
 
-import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
+import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 /**
   * Created by Administrator on 7/31/2018.
   */
-class ClientHandler extends ChannelInboundMessageHandlerAdapter[String]{
-  override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = {
+class ClientHandler extends SimpleChannelInboundHandler[String]{
+  override def channelRead0(ctx: ChannelHandlerContext, msg: String): Unit = {
     println(msg)
   }
 }
