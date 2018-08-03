@@ -2,18 +2,17 @@ package com.catran.trading.netty.new_server;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.DefaultEventExecutor;
 
 import java.sql.SQLOutput;
 
 
-public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
+public class ChatServerHandler extends ChannelInboundMessageHandlerAdapter<String> {
 
     //private static final String name = "NEWTUN";
-    private static final ChannelGroup channels = new DefaultChannelGroup(new DefaultEventExecutor());
+    private static final ChannelGroup channels = new DefaultChannelGroup();
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
@@ -36,7 +35,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+    public void messageReceived(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
         System.out.println(channelHandlerContext.channel().remoteAddress() + "wrote" + s);
         Channel incoming = channelHandlerContext.channel();
         for (Channel channel: channels){

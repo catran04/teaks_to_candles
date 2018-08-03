@@ -2,12 +2,12 @@ package com.catran.trading.netty.client
 
 import com.catran.trading.dao.teakDao.TeakDao
 import com.catran.trading.model.Teak
-import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
+import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
 
-class TeakHandler(teakDao: TeakDao) extends SimpleChannelInboundHandler[String]{
+class TeakHandler(teakDao: TeakDao) extends ChannelInboundMessageHandlerAdapter[String]{
 
 
-  override def channelRead0(ctx: ChannelHandlerContext, msg: String): Unit = {
+  override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = {
     try {
       println("msg: " + msg)
       val teak = Teak.fromJson(msg)

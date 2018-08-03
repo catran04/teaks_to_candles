@@ -3,13 +3,12 @@ package com.catran.trading.netty.server;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.DefaultEventExecutor;
 
-public class ServerHandlerJava extends SimpleChannelInboundHandler<ByteBuf> {
+public class ServerHandlerJava extends ChannelInboundMessageHandlerAdapter<ByteBuf> {
 
-    private DefaultChannelGroup channels = new DefaultChannelGroup(new DefaultEventExecutor());
+    private DefaultChannelGroup channels = new DefaultChannelGroup();
 
     Thread t1 = new Thread(new Runnable() {
         public void run() {
@@ -30,7 +29,7 @@ public class ServerHandlerJava extends SimpleChannelInboundHandler<ByteBuf> {
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+    public void messageReceived(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
         System.out.println(msg);
     }
 

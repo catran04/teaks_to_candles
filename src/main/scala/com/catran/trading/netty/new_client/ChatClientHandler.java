@@ -1,13 +1,13 @@
 package com.catran.trading.netty.new_client;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 
 
-public class ChatClientHandler extends SimpleChannelInboundHandler<String> {
+public class ChatClientHandler extends ChannelInboundMessageHandlerAdapter<String> {
 
     @Override
-    public void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+    public void messageReceived(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
         System.out.println(s);
     }
 }

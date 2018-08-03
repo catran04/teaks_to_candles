@@ -1,8 +1,7 @@
 package com.catran.trading.netty.server
 
 import io.netty.channel.group.DefaultChannelGroup
-import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
-import io.netty.util.concurrent.DefaultEventExecutor
+import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
 import org.apache.log4j.Logger
 
 import scala.collection.JavaConverters._
@@ -11,13 +10,13 @@ import scala.concurrent.Future
 /**
   * Created by Administrator on 7/30/2018.
   */
-class WebSocketServerHandler() extends SimpleChannelInboundHandler[String]{
+class WebSocketServerHandler() extends ChannelInboundMessageHandlerAdapter[String]{
   private val logger = Logger.getLogger(getClass)
 
-  val channels = new DefaultChannelGroup(new DefaultEventExecutor())
+  val channels = new DefaultChannelGroup()
   sendLoop()
 
-  override def channelRead0(ctx: ChannelHandlerContext, msg: String): Unit = {
+  override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = {
     println(s"message rec: ${msg}")
   }
 
