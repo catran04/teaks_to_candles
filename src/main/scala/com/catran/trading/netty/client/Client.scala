@@ -12,7 +12,7 @@ import io.netty.channel.socket.nio.NioSocketChannel
 /**
   * Created by Administrator on 7/30/2018.
   */
-class Client  (host: String, port: Int, initializer: ChannelInitializer[SocketChannel]) {
+class Client (host: String, port: Int, initializer: ChannelInitializer[SocketChannel]) {
   def run(): Unit = {
     val group = new NioEventLoopGroup()
     try {

@@ -7,7 +7,6 @@ import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 public class ClientHandlerJava extends ChannelInboundMessageHandlerAdapter<String> {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
-        System.out.println("channelRead0");
         System.out.println(msg);
     }
 }

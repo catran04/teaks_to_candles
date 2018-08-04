@@ -2,9 +2,11 @@ package com.catran.trading.netty.server
 
 import com.catran.trading.aggregator.TeakAggregator
 import com.catran.trading.dao.teakDao.TeakDao
+import com.catran.trading.util.TimeUtil
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
 import org.apache.log4j.Logger
+import org.joda.time.DateTime
 
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,6 +17,8 @@ import scala.concurrent.Future
 class WebSocketServerHandler(teakDao: TeakDao) extends ChannelInboundMessageHandlerAdapter[String]{
 
   private val logger = Logger.getLogger(getClass)
+  private val ONE_MINUTE = 60000L
+  private val TEN_MINUTES = ONE_MINUTE * 10
 
   val channels = new DefaultChannelGroup()
   sendLoop()
@@ -24,29 +28,41 @@ class WebSocketServerHandler(teakDao: TeakDao) extends ChannelInboundMessageHand
   }
 
   override def handlerAdded(ctx: ChannelHandlerContext): Unit = {
-    val to = System.currentTimeMillis()
-    val from = System.currentTimeMillis() - (1000 * 60 * 10)
+    val to = TimeUtil.truncSeconds(System.currentTimeMillis())
+    val from = to - TEN_MINUTES
     val teaks = teakDao.getTeaks(from, to)
+    println(s"teaks length: ${teaks.length}")
 
-    val prices = TeakAggregator.createCandles(teaks.toList)
-    println(prices.mkString("\n"))
-    ctx.write(teaks.mkString("\n"))
+    val candles = TeakAggregator.createCandles(teaks.toList).sortBy(_.timestamp)
+    println(candles.mkString("\n"))
+    candles.foreach(candle => ctx.write(candle + "\r\n"))
     channels.add(ctx.channel())
-
   }
 
   override def handlerRemoved(ctx: ChannelHandlerContext): Unit = {
     channels.remove(ctx.channel())
   }
 
+  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
+    cause.printStackTrace()
+  }
+
   private def sendLoop(): Unit = Future{
-    var i = 0
+    val t = System.currentTimeMillis()
+    var nextMinute = TimeUtil.truncSeconds(new DateTime(t).plusMinutes(1).getMillis)
+    println(s"nextMinute: ${new DateTime(nextMinute).toString("yyyy-MM-dd'T'HH:mm:ss")}")
     while(true) {
-      for(channel <- channels.asScala) {
-        channel.write(s"hello: ${i} \n")
+      if(System.currentTimeMillis() >= nextMinute) {
+        for (channel <- channels.asScala) {
+          val teaks = teakDao.getTeaks(nextMinute - ONE_MINUTE, nextMinute)
+          val candles = TeakAggregator.createCandles(teaks.toList)
+          println(s"candles in loop: ${candles.mkString("\n")}")
+          candles.foreach(candle => channel.write(candle + "\r\n"))
+        }
+        nextMinute = nextMinute + ONE_MINUTE
       }
-      i += 1
-      Thread.sleep(2000)
     }
   }
+
+
 }
