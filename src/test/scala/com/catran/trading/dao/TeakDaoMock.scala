@@ -10,11 +10,12 @@ import org.json4s.{NoTypeHints, native}
 class TeakDaoMock extends TeakDao {
   private val logger = Logger.getLogger(getClass)
 
-  override def getTeaks(from: Long, to: Long): Seq[Teak] = {
+  override def getTeaks(from: Long, to: Long): List[Teak] = {
+    require(from <= to, "'From' should be less or equal 'to'")
     logger.info("Reading teaks from a storage...")
-    val strTeaks = ResourceFileHandler.read("teaks.json")
+    val strTeaks = ResourceFileHandler.read("/teaks.json")
     implicit val formats = native.Serialization.formats(NoTypeHints)
-    val teaks = Serialization.read[Seq[Teak]](strTeaks)
+    val teaks = Serialization.read[List[Teak]](strTeaks)
     val filteredTeaks = teaks.filter(teak => teak.timestamp >= from && teak.timestamp <= to)
     logger.info(s"Teaks was received from: ${from}, to: ${to}")
     filteredTeaks

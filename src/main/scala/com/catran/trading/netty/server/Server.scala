@@ -1,8 +1,8 @@
 package com.catran.trading.netty.server
 
 
+import com.catran.trading.aggregator.TeakHandler
 import com.catran.trading.dao.teakDao.SQLiteTeakDao
-import com.catran.trading.netty.client.TeakHandler
 import com.catran.trading.options.ApplicationOptions
 import com.catran.trading.sql.sq_lite.SQLiteConnector
 import io.netty.bootstrap.ServerBootstrap

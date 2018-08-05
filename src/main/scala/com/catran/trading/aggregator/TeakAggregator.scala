@@ -4,7 +4,7 @@ import com.catran.trading.model.{Candle, Teak}
 import com.catran.trading.util.TimeUtil
 import org.joda.time.{DateTime, DateTimeZone}
 
-import scala.collection.{immutable, mutable}
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 object TeakAggregator {
@@ -12,18 +12,17 @@ object TeakAggregator {
   private val ONE_MINUTE = 60000
 
   def createCandles(teaks: List[Teak]): List[Candle] = {
-    require(teaks.nonEmpty, "List of teaks is empty")
     val groupedByTicker: Map[String, List[Teak]] = teaks.groupBy(_.ticker) // groups by ticker
-    val groupedByMinuteAndTicker: immutable.Iterable[Map[String, List[Teak]]] =
-      groupedByTicker.map { case (k, v) => groupByMinute(v) } //groups by one minute
-    val minutesTeaks: immutable.Iterable[(String, List[Teak])] = for {
+    val groupedByMinuteAndTicker =
+      groupedByTicker.par.map { case (k, v) => groupByMinute(v) } //groups by one minute
+    val minutesTeaks = for {
       minuteTeaks <- groupedByMinuteAndTicker
       minuteTeaksByOneMinute <- minuteTeaks
     } yield minuteTeaksByOneMinute // flatten our groupByMinuteAndTicker
-    minutesTeaks.map { case (timestamp, teaks) => createCandle(timestamp, teaks) }.toList
+    minutesTeaks.par.map { case (timestamp, teaks) => createCandle(timestamp, teaks) }.toList
   }
 
-  private def groupByMinute(teaksOfOneTicker: List[Teak]): Map[String, List[Teak]] = {
+  private[aggregator] def groupByMinute(teaksOfOneTicker: List[Teak]): Map[String, List[Teak]] = {
     DateTimeZone.setDefault(DateTimeZone.UTC)
     val minTime = teaksOfOneTicker.minBy(_.timestamp).timestamp
     val maxTime = teaksOfOneTicker.maxBy(_.timestamp).timestamp
@@ -42,7 +41,7 @@ object TeakAggregator {
     grouped.toMap
   }
 
-  private def getMinuteTimeRange(timeFrom: Long, timeTo: Long): Seq[Long] = {
+  private[aggregator] def getMinuteTimeRange(timeFrom: Long, timeTo: Long): Seq[Long] = {
     val timeSet = new ArrayBuffer[Long]
     var t = timeFrom
     while (t <= timeTo) {
@@ -52,8 +51,8 @@ object TeakAggregator {
     timeSet
   }
 
-  private def createCandle(timestamp: String, teaksOfOneTickerByMinute: List[Teak]): Candle = {
-    val candle = Candle(
+  private[aggregator] def createCandle(timestamp: String, teaksOfOneTickerByMinute: List[Teak]): Candle = {
+    Candle(
       ticker = teaksOfOneTickerByMinute.head.ticker,
       timestamp = timestamp,
       open = teaksOfOneTickerByMinute.minBy(_.timestamp).price,
@@ -61,30 +60,29 @@ object TeakAggregator {
       low = teaksOfOneTickerByMinute.minBy(_.price).price,
       close = teaksOfOneTickerByMinute.maxBy(_.timestamp).price,
       volume = teaksOfOneTickerByMinute.map(_.volume).sum)
-    candle
   }
 
-/*    private def getPrices(teaksOfOneTicker: Vector[Teak]): CandlePrices = {
-      val headPrice = teaksOfOneTicker.head.price
-      var open: Double = headPrice
-      var high: Double = headPrice
-      var low: Double = headPrice
-      var close: Double = headPrice
-      var volume = teaksOfOneTicker.head.volume
+  /*    private def getPrices(teaksOfOneTicker: Vector[Teak]): CandlePrices = {
+        val headPrice = teaksOfOneTicker.head.price
+        var open: Double = headPrice
+        var high: Double = headPrice
+        var low: Double = headPrice
+        var close: Double = headPrice
+        var volume = teaksOfOneTicker.head.volume
 
 
 
-      teaksOfOneTicker.foreach(teak => {
-        val price = teak.price
-        val volume = teak.volume
-        if(teak.timestamp)
-      })
-    }
-  case class CandlePrices(
-                           open: Double,
-                           high: Double,
-                           low: Double,
-                           close: Double,
-                           volume: Long
-                         )*/
+        teaksOfOneTicker.foreach(teak => {
+          val price = teak.price
+          val volume = teak.volume
+          if(teak.timestamp)
+        })
+      }
+    case class CandlePrices(
+                             open: Double,
+                             high: Double,
+                             low: Double,
+                             close: Double,
+                             volume: Long
+                           )*/
 }

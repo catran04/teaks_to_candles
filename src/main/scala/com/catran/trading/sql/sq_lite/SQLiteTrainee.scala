@@ -16,7 +16,7 @@ class SQLiteTrainee(cn: Connection, options: ApplicationOptions) {
     */
   def createTable: Unit = {
     statement.execute(s"CREATE TABLE IF NOT EXISTS ${options.tableName}(" +
-      "timestamp INTEGER PRIMARY KEY," +
+      "timestamp INTEGER NOT NULL," +
       "ticker VARCHAR(12) NOT NULL," +
       "price REAL NOT NULL," +
       "volume INTEGER);")

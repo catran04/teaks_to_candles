@@ -1,7 +1,6 @@
 package com.catran.trading.netty.server
 
-
-import com.catran.trading.netty.client.TeakHandler
+import com.catran.trading.aggregator.TeakHandler
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.string.{StringDecoder, StringEncoder}

@@ -1,4 +1,4 @@
-package com.catran.trading.netty.client;
+package com.catran.trading.netty.teaker;
 
 import com.catran.trading.dao.teakDao.TeakDao;
 import com.catran.trading.model.Teak;

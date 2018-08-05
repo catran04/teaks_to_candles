@@ -1,6 +1,6 @@
 package com.catran.trading.netty.server
 
-import com.catran.trading.netty.client.TeakHandler
+import com.catran.trading.aggregator.TeakHandler
 import com.catran.trading.util.TimeUtil
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}

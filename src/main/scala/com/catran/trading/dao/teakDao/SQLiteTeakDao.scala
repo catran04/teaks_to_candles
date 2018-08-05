@@ -15,12 +15,13 @@ class SQLiteTeakDao(appOptions: ApplicationOptions, connector: SQLConnector) ext
   SQLiteTrainee(connection, appOptions) //prepare database and creates table for the using
 
 
-  override def getTeaks(from: Long, to: Long): Seq[Teak] = {
+  override def getTeaks(from: Long, to: Long): List[Teak] = {
     try {
+      require(from <= to, "'From' should be less or equal 'to'")
       val query = s"SELECT * FROM ${appOptions.tableName}" +
         s" WHERE timestamp >= ${from} AND timestamp <= ${to};"
       val rs = statement.executeQuery(query)
-      var teaks: mutable.HashSet[Teak] = mutable.HashSet[Teak]()
+      var teaks = mutable.MutableList[Teak]()
       while (rs.next()) {
         val teak = Teak(
           timestamp = rs.getLong(1),
@@ -30,7 +31,7 @@ class SQLiteTeakDao(appOptions: ApplicationOptions, connector: SQLConnector) ext
         )
         teaks += teak
       }
-      teaks.toSeq
+      teaks.toList
     } catch {
       case e: Exception =>
         logger.error(e)

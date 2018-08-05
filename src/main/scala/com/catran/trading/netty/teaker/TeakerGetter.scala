@@ -1,7 +1,7 @@
 package com.catran.trading.netty.teaker
 
 import com.catran.trading.dao.teakDao.SQLiteTeakDao
-import com.catran.trading.netty.client.{Client, TeakInitializer}
+import com.catran.trading.netty.client.Client
 import com.catran.trading.options.ApplicationOptions
 import com.catran.trading.sql.sq_lite.SQLiteConnector
 
