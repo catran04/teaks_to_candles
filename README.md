@@ -26,7 +26,7 @@ you should apply the options to argument of app in format
 | `serverHost=<String>`|a host of the server| `localhost`|
 | `serverPort=<Integer>` |a port of the server.  |`9590`|
 | `clientHost=<String>` |a host of the client.  | `localhost`|
-| `clientPort=<Integer>` |a port of the client. | `3306`|
+| `clientPort=<Integer>` |a port of the client. | `9590`|
 
 ## Launch using sbt
 ### First step
@@ -35,8 +35,12 @@ you should apply the options to argument of app in format
 - clone this repository
 ### Third step
 - enter in a console command in source folder
-`sbt run` or `sbt "run <nameOption1>=<value> <nameOption2=<value>"` for applying custom options
+`sbt "runMain com.catran.trading.netty.teaker.TeakerGetter` or `sbt "runMain com.catran.trading.netty.teaker.TeakerGetter <nameOption1>=<value> <nameOption2=<value>"` for applying custom options. This command runs application that will receive the teaks from exchange.
+### Fourth step
+- enter in a console command in source folder `sbt "runMain com.catran.trading.netty.server.Server` or with options as above. This command runs Server application that will be receive teakers from a storage and aggregate their to candles and send to an user.
+### Fifth step
+- enter in a console command in source folder `sbt "runMain com.catran.trading.netty.client.Client` or with options as above. This command runs the client that will be receive candles.
 
 ## State store
 - By default the application uses `SqLite` database.
-- In future will be implemented Kafka
+- In future will be implemented Kafka.
