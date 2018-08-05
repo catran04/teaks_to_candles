@@ -4,7 +4,7 @@ import com.catran.trading.dao.teakDao.SQLiteTeakDao
 import com.catran.trading.options.ApplicationOptions
 import com.catran.trading.sql.sq_lite.SQLiteConnector
 
-object Main {
+object TeakerGetter {
 
   def main(args: Array[String]): Unit = {
     val options = ApplicationOptions(args)
