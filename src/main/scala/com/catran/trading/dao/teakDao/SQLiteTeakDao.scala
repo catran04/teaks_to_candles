@@ -33,7 +33,7 @@ class SQLiteTeakDao(appOptions: ApplicationOptions, connector: SQLConnector) ext
       teaks.toSeq
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        logger.error(e)
         throw e
     }
   }
@@ -52,7 +52,9 @@ class SQLiteTeakDao(appOptions: ApplicationOptions, connector: SQLConnector) ext
         ps.setInt(4, teak.volume)
         ps.executeUpdate()
       } catch {
-        case e: Exception => e.printStackTrace()
+        case e: Exception =>
+          logger.error(e)
+          throw e
       }
   }
 }

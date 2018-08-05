@@ -1,19 +1,15 @@
 package com.catran.trading.netty.client
 
+import com.catran.trading.aggregator.TeakAggregator
 import com.catran.trading.dao.teakDao.TeakDao
-import com.catran.trading.model.Teak
-import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
+import com.catran.trading.model.Candle
 
-class TeakHandler(teakDao: TeakDao) extends ChannelInboundMessageHandlerAdapter[String]{
+class TeakHandler(teakDao: TeakDao){
 
+  def apply(teakDao: TeakDao): TeakHandler = new TeakHandler(teakDao)
 
-  override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = {
-    try {
-      println("msg: " + msg)
-      val teak = Teak.fromJson(msg)
-      teakDao.setTeak(teak)
-    } catch {
-      case e: Exception => e.printStackTrace()
-    }
+  def getCandles(from: Long, to: Long): List[Candle] = {
+    val teaks = teakDao.getTeaks(from, to)
+    TeakAggregator.createCandles(teaks.toList).sortBy(_.timestamp)
   }
 }

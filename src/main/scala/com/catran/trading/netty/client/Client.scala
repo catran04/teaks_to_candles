@@ -9,8 +9,12 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
 
+
 /**
-  * Created by Administrator on 7/30/2018.
+  *
+  * @param host - host of a socket server
+  * @param port - port of a socket server
+  * @param initializer - needs for handling of data
   */
 class Client (host: String, port: Int, initializer: ChannelInitializer[SocketChannel]) {
   def run(): Unit = {
@@ -36,8 +40,8 @@ object Client {
   def main(args: Array[String]): Unit = {
     val options = ApplicationOptions(args)
     new Client(
-      host = options.brokerHost,
-      port = 9590,
+      host = options.clientHost,
+      port = options.clientPort,
       initializer = new ClientInitializer()).run()
   }
 }

@@ -4,27 +4,16 @@ import com.catran.trading.dao.teakDao.TeakDao;
 import com.catran.trading.model.Teak;
 import com.catran.trading.util.ByteDecoder;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.MessageBuf;
 import io.netty.channel.*;
+import org.apache.log4j.Logger;
 
 public class TeakHandlerJava extends ChannelInboundByteHandlerAdapter {
-    TeakDao teakDao;
+    private TeakDao teakDao;
+    private Logger logger = Logger.getLogger(getClass());
 
     public TeakHandlerJava(TeakDao teakDao) {
         this.teakDao = teakDao;
     }
-
-//    @Override
-//    public void messageReceived(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-//        byte[] bytes = getByteArrayFromByteBuffer(msg);
-//        try {
-//            Teak teak = ByteDecoder.apply(bytes);
-//            System.out.println(teak);
-//            teakDao.setTeak(teak);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private static byte[] getByteArrayFromByteBuffer(ByteBuf buf) {
         byte[] bytes = new byte[buf.readableBytes()];
@@ -37,10 +26,10 @@ public class TeakHandlerJava extends ChannelInboundByteHandlerAdapter {
         byte[] bytes = getByteArrayFromByteBuffer(in);
         try {
             Teak teak = ByteDecoder.apply(bytes);
-            System.out.println(teak);
+            logger.info(teak);
             teakDao.setTeak(teak);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }

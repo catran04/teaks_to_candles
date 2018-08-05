@@ -2,11 +2,10 @@ package com.catran.trading.netty.client
 
 
 import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
-/**
-  * Created by Administrator on 7/31/2018.
-  */
+import org.apache.log4j.Logger
+
 class ClientHandler extends ChannelInboundMessageHandlerAdapter[String]{
-  override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = {
-    println(msg)
-  }
+  private val logger = Logger.getLogger(getClass)
+
+  override def messageReceived(ctx: ChannelHandlerContext, msg: String): Unit = logger.info(msg)
 }

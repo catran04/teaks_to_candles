@@ -1,21 +1,17 @@
 package com.catran.trading.options
 
-import com.catran.trading.netty.client.ClientHandler
-import io.netty.channel.ChannelHandler
-
 /**
   * using for application the different options
   */
 case class ApplicationOptions(
                                storage: String = "SqLite",
                                tableName: String = "teakTable",
-                               brokerHost: String = "localhost",
-                               brokerPort: Int = 5555,
+                               teakReceiverHost: String = "localhost",
+                               teakReceiverPort: Int = 5555,
                                serverHost: String = "localhost",
-                               serverPort: Int = 5554,
+                               serverPort: Int = 9590,
                                clientHost: String = "localhost",
-                               clientPort: Int = 5554,
-                               clientHandler: ChannelHandler = new ClientHandler(),
+                               clientPort: Int = 9590,
                                sqlite: SqLiteOptions = SqLiteOptions()
                              )
 
@@ -30,11 +26,18 @@ object ApplicationOptions {
     args.foldLeft(ApplicationOptions()) { (options, arg) =>
       arg.split("=") match {
         case Array("storage", value) => options.copy(storage = value)
-        case Array("tableName", value) => options.copy(tableName = value)
+//        case Array("tableName", value) => options.copy(tableName = value)
 
-        case Array("sqlite.workingConnection", value) => options.copy(sqlite = options.sqlite.copy(workingConnection = value))
-        case Array("sqlite.testConnection", value) => options.copy(sqlite = options.sqlite.copy(testConnection = value))
-        case Array("sqlite.driver", value) => options.copy(sqlite = options.sqlite.copy(driver = value))
+        case Array("teakReceiverHost", value) => options.copy(teakReceiverHost = value)
+        case Array("teakReceiverPort", value) => options.copy(teakReceiverPort = value.toInt)
+        case Array("serverHost", value) => options.copy(serverHost = value)
+        case Array("serverPort", value) => options.copy(serverPort = value.toInt)
+        case Array("clientHost", value) => options.copy(clientHost = value)
+        case Array("clientPort", value) => options.copy(clientPort = value.toInt)
+
+//        case Array("sqlite.workingConnection", value) => options.copy(sqlite = options.sqlite.copy(workingConnection = value))
+//        case Array("sqlite.testConnection", value) => options.copy(sqlite = options.sqlite.copy(testConnection = value))
+//        case Array("sqlite.driver", value) => options.copy(sqlite = options.sqlite.copy(driver = value))
 
         case exc => throw new RuntimeException(s"invalid args: ${exc.mkString}")
       }
