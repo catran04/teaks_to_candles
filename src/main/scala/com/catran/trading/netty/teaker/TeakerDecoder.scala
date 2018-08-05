@@ -11,6 +11,7 @@ class TeakerDecoder extends ByteToMessageDecoder{
     val bytes = getByteArrayFromByteBuffer(in)
     try {
       val teak = ByteDecoder.apply(bytes)
+      out.add(teak)
     } catch {
       case e: Exception =>
         e.printStackTrace()

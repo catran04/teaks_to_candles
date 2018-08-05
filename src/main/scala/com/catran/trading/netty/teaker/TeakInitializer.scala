@@ -8,6 +8,7 @@ import io.netty.channel.socket.SocketChannel
 class TeakInitializer(options: ApplicationOptions, teakDao: TeakDao) extends ChannelInitializer[SocketChannel]{
   override def initChannel(ch: SocketChannel): Unit = {
     val pipeline = ch.pipeline()
+    pipeline.addLast("byteDecoder", new TeakerDecoder)
     pipeline.addLast("handler", new TeakHandlerJava(teakDao))
   }
 }
